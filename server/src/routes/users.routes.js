@@ -68,4 +68,36 @@ userRoutes.delete("/:id", (req, res) => {
     });
   });
 });
+
+userRoutes.patch("/:id", (req, res) => {
+  const id = req.params.id;
+  const newUserInfo = req.body;
+  fs.readFile(usersFile, (error, data) => {
+    if (error) {
+      return res.send("Error al leer archivo");
+    }
+    const dataJson = JSON.parse(data);
+    let userToUpdated = dataJson.filter((user) => user.userId === id);
+    if (!userToUpdated) {
+      return res.send("Error al escribir en el archivo");
+    }
+
+    userToUpdated = { ...userToUpdated, ...newUserInfo };
+
+    const usersUpdated = dataJson.map((user) => {
+      if (user.userId === id) {
+        user = userToUpdated;
+      }
+
+      return user;
+    });
+    fs.writeFile(usersFile, JSON.stringify(usersUpdated), (error) => {
+      if (error) {
+        return res.send("Error al escribir en el archivo");
+      }
+      return res.json(usersUpdated);
+    });
+  });
+});
+
 module.exports = userRoutes;

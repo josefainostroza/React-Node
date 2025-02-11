@@ -8,5 +8,8 @@
         "name": "server",
         "path": "./server"
       }
-    ]
+    ],
+    "settings": {
+      "liveServer.settings.multiRootWorkspaceName": "server"
+    }
   }
